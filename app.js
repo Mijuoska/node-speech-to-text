@@ -8,13 +8,12 @@ dotenv.config()
 
 
 
-class Main {
+class App {
     constructor(audioRecorder, createRecognizer) {
     this.DIRECTORY = process.env.RECORDINGS_DIRECTORY
     this.LANGUAGE = process.env.RECOGNITION_LANGUAGE
     this.recorder = audioRecorder;
-    this.createRecognizer = createRecognizer;
-    console.log(this.createRecognizer)
+    this.recognizer = createRecognizer;
     this.filename = '';
 
     // Log information on the following events.
@@ -24,7 +23,11 @@ class Main {
 
     this.recorder.on('close', this.recognize.bind(this));
 
+
 }
+
+
+
     createDirectory() {
         if (!fs.existsSync(this.DIRECTORY)) {
             fs.mkdirSync(this.DIRECTORY);
@@ -58,7 +61,7 @@ class Main {
     }
 
     recognize() {
-        let recognizer = this.createRecognizer(this.fileName, this.LANGUAGE);
+        let recognizer = this.recognizer(this.fileName, this.LANGUAGE);
         recognizer.recognizeOnceAsync(
             result => {
                 if (!result.privJson) {
@@ -73,7 +76,6 @@ class Main {
                     recognizer.close();
                     recognizer = undefined;
                     fs.unlinkSync(this.fileName)
-
                 }
             },
             err => {
@@ -93,11 +95,11 @@ class Main {
 
 }
 
-const app = new Main(audioRecorder, createRecognizer)
-
+const app = new App(audioRecorder, createRecognizer)
 app.createDirectory();
 app.createFile();
 app.recordToFile();
+
 
 
 
