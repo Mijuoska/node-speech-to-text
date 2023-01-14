@@ -11,20 +11,28 @@ const DIRECTORY = process.env.RECORDINGS_DIRECTORY
 const KEEP_RECORDINGS = process.env.KEEP_RECORDINGS == 'true'
 
 
-// Create path to write recordings to.
 if (!fs.existsSync(DIRECTORY)) {
     fs.mkdirSync(DIRECTORY);
 }
 
+const fileName = path.join(DIRECTORY, 'speech.wav');
+
+
+main()
+
+function main() {
+// Create path to write recordings to.
+
+
 
 // Create file path with random name.
-const fileName = path.join(
-    DIRECTORY,
-    Math.random()
-    .toString(36)
-    .replace(/[^0-9a-zA-Z]+/g, '')
-    .concat('.wav')
-);
+// const fileName = path.join(
+//     DIRECTORY,
+//     Math.random()
+//     .toString(36)
+//     .replace(/[^0-9a-zA-Z]+/g, '')
+//     .concat('.wav')
+// );
 
 // Create write stream.
 const fileStream = fs.createWriteStream(fileName, {
@@ -36,9 +44,8 @@ const fileStream = fs.createWriteStream(fileName, {
 audioRecorder.start().stream().pipe(fileStream);
 console.log('Now recording...')
 // Keep process alive.
-// process.stdin.resume();
+process.stdin.resume();
 console.warn('Press ctrl+c to exit.');
-
 
 // Log information on the following events.
 audioRecorder.on('error', function () {
@@ -46,6 +53,11 @@ audioRecorder.on('error', function () {
 });
 
 audioRecorder.on('close', recognize);
+
+}
+
+
+
 
 function recognize() {
     const language = process.env.RECOGNITION_LANGUAGE;
@@ -64,9 +76,8 @@ function recognize() {
             }
             recognizer.close();
             recognizer = undefined;
-            if (!KEEP_RECORDINGS) {
             fs.unlinkSync(fileName)
-            }
+            
 
         }
     }
@@ -76,7 +87,6 @@ function recognize() {
 
             recognizer.close();
             recognizer = undefined;
-            if (!KEEP_RECORDINGS) {
             fs.unlinkSync(fileName)
             }
 

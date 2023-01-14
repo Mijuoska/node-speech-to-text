@@ -1,7 +1,12 @@
 
 import AudioRecorder from 'node-AudioRecorder'
+import dotenv from 'dotenv'
+
+dotenv.config()
 
 const DEBUG_MODE = process.env.DEBUG_MODE == 'true'
+
+
 // Options is an optional parameter for the constructor call.
 // If an option is not given the default value, as seen below, will be used.
 const options = {
@@ -13,7 +18,7 @@ program: `sox`, // Which program to use, either `arecord`, `rec`, or `sox`.
     rate: 16000, // Sample rate.
     type: `wav`, // Format type.
 
-    silence: 1, // Duration of silence in seconds before it stops recording.
+//    silence: 1, // Duration of silence in seconds before it stops recording.
     thresholdStart: 0.5, // Silence threshold to start recording.
     thresholdStop: 0.5, // Silence threshold to stop recording.
     keepSilence: false, // Keep the silence in the recording.
