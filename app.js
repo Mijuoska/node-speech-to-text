@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import dotenv from 'dotenv'
 import audioRecorder from './recorder.js';
-import createRecognizer from './texttospeech.js'
+import createRecognizer from './speech-recognition.js'
 
 dotenv.config()
 
