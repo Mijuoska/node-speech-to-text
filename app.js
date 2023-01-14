@@ -6,7 +6,10 @@ import createRecognizer from './speech-recognition.js'
 
 dotenv.config()
 
+// Constants
 const DIRECTORY = process.env.RECORDINGS_DIRECTORY
+const KEEP_RECORDINGS = process.env.KEEP_RECORDINGS == 'true'
+
 
 // Create path to write recordings to.
 if (!fs.existsSync(DIRECTORY)) {
@@ -31,7 +34,7 @@ const fileStream = fs.createWriteStream(fileName, {
 
 // Start and write to the file.
 audioRecorder.start().stream().pipe(fileStream);
-
+console.log('Now recording...')
 // Keep process alive.
 // process.stdin.resume();
 console.warn('Press ctrl+c to exit.');
@@ -46,10 +49,10 @@ audioRecorder.on('close', recognize);
 
 function recognize() {
     const language = process.env.RECOGNITION_LANGUAGE;
+
     let recognizer = createRecognizer(fileName, language);
     recognizer.recognizeOnceAsync(
         result => {
-             console.log(result)
              if (!result.privJson) {
                 console.error(`There was an error connecting to the speech recognition service. Details: ${result.privErrorDetails}`)
              } else {
@@ -61,6 +64,10 @@ function recognize() {
             }
             recognizer.close();
             recognizer = undefined;
+            if (!KEEP_RECORDINGS) {
+            fs.unlinkSync(fileName)
+            }
+
         }
     }
         ,
@@ -69,9 +76,12 @@ function recognize() {
 
             recognizer.close();
             recognizer = undefined;
-        });
+            if (!KEEP_RECORDINGS) {
+            fs.unlinkSync(fileName)
+            }
+
+        }
         
-    // fs.unlink(fileName, function() {
-    //     console.log(`${fileName} deleted`)
-    // })
+        );
+        
 }

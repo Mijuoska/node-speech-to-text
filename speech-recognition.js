@@ -6,7 +6,7 @@ dotenv.config();
 
 
 const subscriptionKey = process.env.COGNITIVE_SERVICES_KEY;
-const serviceRegion = "norwayeast"; 
+const serviceRegion = process.env.SERVICE_REGION
 
 
 

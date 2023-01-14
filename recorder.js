@@ -1,7 +1,7 @@
 
 import AudioRecorder from 'node-AudioRecorder'
 
-
+const DEBUG_MODE = process.env.DEBUG_MODE == 'true'
 // Options is an optional parameter for the constructor call.
 // If an option is not given the default value, as seen below, will be used.
 const options = {
@@ -20,7 +20,7 @@ program: `sox`, // Which program to use, either `arecord`, `rec`, or `sox`.
 }
 // Optional parameter intended for debugging.
 // The object has to implement a log and warn function.
-const logger = process.env.DEBUG_MODE ? console : null;
+const logger = DEBUG_MODE ? console : null;
 
 const audioRecorder = new AudioRecorder(options, logger)
 
