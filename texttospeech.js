@@ -30,5 +30,5 @@ function createRecognizer(audiofilename, audioLanguage) {
     return new sdk.SpeechRecognizer(speechConfig, audioConfig);
 }
 
-export default { createRecognizer }
+export default createRecognizer
 
