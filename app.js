@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import inquirer from 'inquirer';
 import dotenv from 'dotenv'
 import audioRecorder from './recorder.js';
 import createRecognizer from './speech-recognition.js'
@@ -55,8 +56,6 @@ class App {
         // Start and write to the file.
         this.recorder.start().stream().pipe(fileStream);
         console.log('Now recording...')
-        // Keep process alive.
-        process.stdin.resume();
         console.warn('Press ctrl+c to exit.');
     }
 
@@ -95,10 +94,34 @@ class App {
 
 }
 
-const app = new App(audioRecorder, createRecognizer)
-app.createDirectory();
-app.createFile();
-app.recordToFile();
+inquirer
+    .prompt([{
+        'type': 'list',
+        'name': "Start Recording or Exit",
+        'choices': ['R', 'E']
+    }])
+    .then((answers) => {
+        const answer = answers["Start Recording or Exit"]
+        if (answer === 'R') {
+        const app = new App(audioRecorder, createRecognizer)
+        app.createDirectory();
+        app.createFile();
+        app.recordToFile();
+        } else {
+            process.exit()
+        }
+
+   
+    })
+    .catch((error) => {
+        if (error.isTtyError) {
+            console.error("Prompt couldn't be rendered in the current environment")
+        } else {
+            console.error(error)
+        }
+    })
+    
+
 
 
 
