@@ -1,4 +1,4 @@
-## Node Text to Speech
+## Node Speech to Text
 
 This is a simple command line app for testing audio recording and speech recognition in Node.
 It uses the node-audiorecorder package and the Azure Cognitive Services SDK.
