@@ -1,6 +1,5 @@
 import fs from 'fs';
 import path from 'path';
-import inquirer from 'inquirer';
 import dotenv from 'dotenv'
 import audioRecorder from './recorder.js';
 import createRecognizer from './speech-recognition.js'
@@ -9,8 +8,8 @@ dotenv.config()
 
 
 
-class App {
-    constructor(audioRecorder, createRecognizer) {
+class SpeechToText {
+    constructor() {
     this.DIRECTORY = process.env.RECORDINGS_DIRECTORY
     this.LANGUAGE = process.env.RECOGNITION_LANGUAGE
     this.recorder = audioRecorder;
@@ -27,7 +26,11 @@ class App {
 
 }
 
-
+    convert() {
+        this.createDirectory();
+        this.createFile();
+        this.recordToFile();
+    }
 
     createDirectory() {
         if (!fs.existsSync(this.DIRECTORY)) {
@@ -94,33 +97,7 @@ class App {
 
 }
 
-inquirer
-    .prompt([{
-        'type': 'list',
-        'name': "Start Recording or Exit",
-        'choices': ['R', 'E']
-    }])
-    .then((answers) => {
-        const answer = answers["Start Recording or Exit"]
-        if (answer === 'R') {
-        const app = new App(audioRecorder, createRecognizer)
-        app.createDirectory();
-        app.createFile();
-        app.recordToFile();
-        } else {
-            process.exit()
-        }
-
-   
-    })
-    .catch((error) => {
-        if (error.isTtyError) {
-            console.error("Prompt couldn't be rendered in the current environment")
-        } else {
-            console.error(error)
-        }
-    })
-    
+export default SpeechToText
 
 
 
